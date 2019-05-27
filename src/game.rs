@@ -1,4 +1,5 @@
 mod player;
+mod enemy;
 
 extern crate nalgebra;
 extern crate ncollide2d;
@@ -21,6 +22,7 @@ pub struct Game {
     world: World<f64>,
     player: player::Player,
     keys_pressed: HashSet<piston_window::Key>,
+    enemies: Vec<enemy::Enemy>,
 }
 
 impl Game {
@@ -28,13 +30,17 @@ impl Game {
         let mut world: World<f64> = World::new();
         world.set_gravity(Vector2::y() * 90.81);
 
-        let player = Game::init_player(&mut world, (50.0, 200.0));
+        let player = player::Player::new(&mut world, (50.0, 200.0));
+
+        let enemies = vec![enemy::Enemy::new(&mut world,  (100.0, 200.0))];
+
         Game::init_ground(&mut world);
 
         Game {
             world,
             player,
             keys_pressed: HashSet::new(),
+            enemies,
         }
     }
 
@@ -65,26 +71,13 @@ impl Game {
 
         self.player.render(context, graphics, &self.world);
 
+        for enemy in &self.enemies {
+            enemy.render(context, graphics, &self.world);
+        }
+
         self.render_ground(context, graphics)
     }
 
-    fn init_player(
-        world: &mut World<f64>,
-        position: (f64, f64),
-    ) -> player::Player {
-        let player_shape = ShapeHandle::new(Cuboid::new(Vector2::new(7.5, 25.0)));
-        let player_collider = ColliderDesc::new(player_shape)
-            .density(1.0)
-            .material(MaterialHandle::new(BasicMaterial::new(0.0, 0.0)));
-        let mut player_rb_desc = RigidBodyDesc::new()
-            .collider(&player_collider)
-            .position(Isometry2::translation(position.0, position.1));
-
-        let player_rigid_body = player_rb_desc.build(world);
-        let player_handle = player_rigid_body.handle();
-
-        player::Player::new(player_handle)
-    }
      fn init_ground(world: &mut World<f64>) {
          // do ground stuff
          let wall_shape = ShapeHandle::new(Cuboid::new(Vector2::new(
