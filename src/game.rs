@@ -32,7 +32,7 @@ impl Game {
 
         let player = player::Player::new(&mut world, (50.0, 200.0));
 
-        let enemies = vec![enemy::Enemy::new(&mut world,  (100.0, 200.0))];
+        let enemies = vec![enemy::Enemy::new(&mut world,  (50.0, 250.0))];
 
         Game::init_ground(&mut world);
 
@@ -81,13 +81,13 @@ impl Game {
      fn init_ground(world: &mut World<f64>) {
          // do ground stuff
          let wall_shape = ShapeHandle::new(Cuboid::new(Vector2::new(
-             100.0,
-             10.0,
+             200.0,
+             5.0,
          )));
          ColliderDesc::new(wall_shape)
              .material(MaterialHandle::new(BasicMaterial::new(0.0, 0.0)))
              .position(Isometry2::translation(
-                 0.0,
+                 200.0,
                  400.0,
              ))
              .build_with_parent(BodyPartHandle::ground(), world);
@@ -99,8 +99,8 @@ impl Game {
         rectangle.draw(
             [
                 0.0,
+                395.0,
                 400.0,
-                100.0,
                 10.0,
             ],
             &context.draw_state,

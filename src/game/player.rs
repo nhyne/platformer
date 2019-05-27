@@ -13,8 +13,10 @@ use nphysics2d::algebra::{Force2, ForceType};
 use std::collections::HashSet;
 
 const BLACK: [f32; 4] = [0.0, 0.0, 0.0, 1.0];
-const PLAYER_WIDTH: f64 = 15.0;
-const PLAYER_HEIGHT: f64 = 15.0;
+const PLAYER_BODY_WIDTH: f64 = 15.0;
+const PLAYER_BODY_HEIGHT: f64 = 15.0;
+const PLAYER_RENDER_WIDTH: f64 = PLAYER_BODY_WIDTH * 2.0;
+const PLAYER_RENDER_HEIGHT: f64 = PLAYER_BODY_HEIGHT * 2.0;
 
 pub struct Player {
     pub shape: Rectangle,
@@ -30,7 +32,7 @@ impl Player {
                 let player_body = b.borrow();
                 let pos = player_body.position().translation.vector;
                 self.shape.draw(
-                    [pos[0], pos[1], PLAYER_WIDTH, PLAYER_HEIGHT],
+                    [pos[0] - PLAYER_BODY_WIDTH, pos[1] - PLAYER_BODY_HEIGHT, PLAYER_RENDER_WIDTH, PLAYER_RENDER_HEIGHT],
                     &context.draw_state,
                     context.transform,
                     graphics,
@@ -40,7 +42,7 @@ impl Player {
     }
 
     pub fn new(world: &mut World<f64>, position: (f64, f64)) -> Player {
-        let player_shape = ShapeHandle::new(Cuboid::new(Vector2::new(7.5, 25.0)));
+        let player_shape = ShapeHandle::new(Cuboid::new(Vector2::new(PLAYER_BODY_WIDTH, PLAYER_BODY_HEIGHT)));
         let player_collider = ColliderDesc::new(player_shape)
             .density(1.0)
             .material(MaterialHandle::new(BasicMaterial::new(0.0, 0.0)));
@@ -62,28 +64,31 @@ impl Player {
             self.jump(world);
         }
         if keys_pressed.contains(&Key::A) {
+            self.move_left(world);
+        }
+        if keys_pressed.contains(&Key::D) {
+            self.move_right(world);
+        }
+    }
 
+    fn move_left(&self, world: &mut World<f64>) {
+        if let Some(body) = world.rigid_body_mut(self.body) {
+            let force = Force2::linear(Vector2::new(-5.0, 0.0));
+            body.apply_force(1, &force, ForceType::VelocityChange, false);
+        }
+    }
+
+    fn move_right(&self, world: &mut World<f64>) {
+        if let Some(body) = world.rigid_body_mut(self.body) {
+            let force = Force2::linear(Vector2::new(5.0, 0.0));
+            body.apply_force(1, &force, ForceType::VelocityChange, false);
         }
     }
 
     fn jump(&self, world: &mut World<f64>) {
         if let Some(body) = world.rigid_body_mut(self.body) {
-            let jump_force = self.jump_factory();
+            let jump_force = Force2::linear(Vector2::new(0.0, -5.0));
             body.apply_force(1, &jump_force, ForceType::VelocityChange, false);
         }
-    }
-
-    //pub fn change_velocity(&mut self, world: &mut World<f64>) {
-    //    let player_body = world.rigid_body_mut(self.body);
-    //    match player_body {
-    //        None => {},
-    //        Some(b) => {
-
-    //        }
-    //    }
-    //}
-
-    fn jump_factory(&self) -> Force2<f64> {
-        Force2::linear(Vector2::new(0.0, -10.0))
     }
 }
