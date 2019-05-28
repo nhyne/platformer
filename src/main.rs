@@ -10,6 +10,7 @@ const WINDOW_HEIGHT: f64 = 420.0;
 fn main() {
     let mut game = game::Game::new();
 
+    let mut frame = 0.0;
     let mut window: PistonWindow =
         WindowSettings::new("piston: draw_state", [WINDOW_WIDTH, WINDOW_HEIGHT])
             .exit_on_esc(true)
@@ -31,12 +32,14 @@ fn main() {
                 Loop::Update(_) => game.update(),
                 Loop::Render(_) => {
                     window.draw_2d(&e, |context, graphics| {
-                        game.render(context, graphics);
+                        let transform = context.transform.trans(frame, 0.0);
+                        game.render(context, transform, graphics);
                     });
                 }
                 _ => {}
             },
             _ => {}
         }
+        frame = frame - 0.01;
     }
 }

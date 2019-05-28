@@ -7,6 +7,7 @@ extern crate nphysics2d;
 extern crate piston_window;
 
 use piston_window::*;
+use piston_window::math::Matrix2d;
 
 use nalgebra::{Isometry2, Vector2};
 use ncollide2d::shape::{Cuboid, ShapeHandle};
@@ -15,6 +16,7 @@ use nphysics2d::object::{BodyPartHandle, ColliderDesc, RigidBodyDesc};
 use nphysics2d::world::World;
 
 use std::collections::HashSet;
+use self::nalgebra::Matrix;
 
 const BLACK: [f32; 4] = [0.0, 0.0, 0.0, 1.0];
 
@@ -65,17 +67,17 @@ impl Game {
         }
     }
 
-    pub fn render<G: Graphics>(&self, context: Context, graphics: &mut G) {
+    pub fn render<G: Graphics>(&self, context: Context, transform: Matrix2d, graphics: &mut G) {
         clear([0.8, 0.8, 0.8, 1.0], graphics);
         graphics.clear_stencil(0);
 
-        self.player.render(context, graphics, &self.world);
+        self.player.render(context, transform, graphics, &self.world);
 
         for enemy in &self.enemies {
-            enemy.render(context, graphics, &self.world);
+            enemy.render(context, transform, graphics, &self.world);
         }
 
-        self.render_ground(context, graphics)
+        self.render_ground(context, transform, graphics);
     }
 
      fn init_ground(world: &mut World<f64>) {
@@ -93,8 +95,7 @@ impl Game {
              .build_with_parent(BodyPartHandle::ground(), world);
      }
 
-    fn render_ground<G: Graphics>(&self, context: Context, graphics: &mut G) {
-        let empty_transform = context.transform.trans(0.0, 0.0);
+    fn render_ground<G: Graphics>(&self, context: Context, transform: Matrix2d, graphics: &mut G) {
         let rectangle = Rectangle::new(BLACK);
         rectangle.draw(
             [
@@ -104,7 +105,7 @@ impl Game {
                 10.0,
             ],
             &context.draw_state,
-            empty_transform,
+            transform,
             graphics,
         );
     }

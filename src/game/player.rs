@@ -2,6 +2,7 @@ extern crate nalgebra;
 extern crate nphysics2d;
 
 use piston_window::*;
+use piston_window::math::Matrix2d;
 
 use core::borrow::Borrow;
 use nalgebra::{Isometry2, Vector2};
@@ -24,7 +25,7 @@ pub struct Player {
 }
 
 impl Player {
-    pub fn render<G: Graphics>(&self, context: Context, graphics: &mut G, world: &World<f64>) {
+    pub fn render<G: Graphics>(&self, context: Context, transform: Matrix2d, graphics: &mut G, world: &World<f64>) {
         let player_body = world.rigid_body(self.body);
         match player_body {
             None => {}
@@ -34,7 +35,7 @@ impl Player {
                 self.shape.draw(
                     [pos[0] - PLAYER_BODY_WIDTH, pos[1] - PLAYER_BODY_HEIGHT, PLAYER_RENDER_WIDTH, PLAYER_RENDER_HEIGHT],
                     &context.draw_state,
-                    context.transform,
+                    transform,
                     graphics,
                 )
             }
