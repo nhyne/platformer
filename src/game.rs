@@ -1,22 +1,21 @@
-mod player;
 mod enemy;
+mod player;
 
 extern crate nalgebra;
 extern crate ncollide2d;
 extern crate nphysics2d;
 extern crate piston_window;
 
-use piston_window::*;
 use piston_window::math::Matrix2d;
+use piston_window::*;
 
 use nalgebra::{Isometry2, Vector2};
 use ncollide2d::shape::{Cuboid, ShapeHandle};
 use nphysics2d::material::{BasicMaterial, MaterialHandle};
-use nphysics2d::object::{BodyPartHandle, ColliderDesc, RigidBodyDesc};
+use nphysics2d::object::{BodyPartHandle, ColliderDesc};
 use nphysics2d::world::World;
 
 use std::collections::HashSet;
-use self::nalgebra::Matrix;
 
 const BLACK: [f32; 4] = [0.0, 0.0, 0.0, 1.0];
 
@@ -34,7 +33,7 @@ impl Game {
 
         let player = player::Player::new(&mut world, (50.0, 200.0));
 
-        let enemies = vec![enemy::Enemy::new(&mut world,  (50.0, 250.0))];
+        let enemies = vec![enemy::Enemy::new(&mut world, (50.0, 250.0))];
 
         Game::init_ground(&mut world);
 
@@ -71,7 +70,8 @@ impl Game {
         clear([0.8, 0.8, 0.8, 1.0], graphics);
         graphics.clear_stencil(0);
 
-        self.player.render(context, transform, graphics, &self.world);
+        self.player
+            .render(context, transform, graphics, &self.world);
 
         for enemy in &self.enemies {
             enemy.render(context, transform, graphics, &self.world);
@@ -80,30 +80,19 @@ impl Game {
         self.render_ground(context, transform, graphics);
     }
 
-     fn init_ground(world: &mut World<f64>) {
-         // do ground stuff
-         let wall_shape = ShapeHandle::new(Cuboid::new(Vector2::new(
-             200.0,
-             5.0,
-         )));
-         ColliderDesc::new(wall_shape)
-             .material(MaterialHandle::new(BasicMaterial::new(0.0, 0.0)))
-             .position(Isometry2::translation(
-                 200.0,
-                 400.0,
-             ))
-             .build_with_parent(BodyPartHandle::ground(), world);
-     }
+    fn init_ground(world: &mut World<f64>) {
+        // do ground stuff
+        let wall_shape = ShapeHandle::new(Cuboid::new(Vector2::new(200.0, 5.0)));
+        ColliderDesc::new(wall_shape)
+            .material(MaterialHandle::new(BasicMaterial::new(0.0, 0.0)))
+            .position(Isometry2::translation(200.0, 400.0))
+            .build_with_parent(BodyPartHandle::ground(), world);
+    }
 
     fn render_ground<G: Graphics>(&self, context: Context, transform: Matrix2d, graphics: &mut G) {
         let rectangle = Rectangle::new(BLACK);
         rectangle.draw(
-            [
-                0.0,
-                395.0,
-                400.0,
-                10.0,
-            ],
+            [0.0, 395.0, 400.0, 10.0],
             &context.draw_state,
             transform,
             graphics,

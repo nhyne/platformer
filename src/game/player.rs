@@ -1,16 +1,16 @@
 extern crate nalgebra;
 extern crate nphysics2d;
 
-use piston_window::*;
 use piston_window::math::Matrix2d;
+use piston_window::*;
 
 use core::borrow::Borrow;
 use nalgebra::{Isometry2, Vector2};
 use ncollide2d::shape::{Cuboid, ShapeHandle};
-use nphysics2d::material::{BasicMaterial, MaterialHandle};
-use nphysics2d::object::{BodyHandle, Body, BodyPartHandle, ColliderDesc, RigidBodyDesc};
-use nphysics2d::world::World;
 use nphysics2d::algebra::{Force2, ForceType};
+use nphysics2d::material::{BasicMaterial, MaterialHandle};
+use nphysics2d::object::{Body, BodyHandle, ColliderDesc, RigidBodyDesc};
+use nphysics2d::world::World;
 use std::collections::HashSet;
 
 const BLACK: [f32; 4] = [0.0, 0.0, 0.0, 1.0];
@@ -25,7 +25,13 @@ pub struct Player {
 }
 
 impl Player {
-    pub fn render<G: Graphics>(&self, context: Context, transform: Matrix2d, graphics: &mut G, world: &World<f64>) {
+    pub fn render<G: Graphics>(
+        &self,
+        context: Context,
+        transform: Matrix2d,
+        graphics: &mut G,
+        world: &World<f64>,
+    ) {
         let player_body = world.rigid_body(self.body);
         match player_body {
             None => {}
@@ -33,7 +39,12 @@ impl Player {
                 let player_body = b.borrow();
                 let pos = player_body.position().translation.vector;
                 self.shape.draw(
-                    [pos[0] - PLAYER_BODY_WIDTH, pos[1] - PLAYER_BODY_HEIGHT, PLAYER_RENDER_WIDTH, PLAYER_RENDER_HEIGHT],
+                    [
+                        pos[0] - PLAYER_BODY_WIDTH,
+                        pos[1] - PLAYER_BODY_HEIGHT,
+                        PLAYER_RENDER_WIDTH,
+                        PLAYER_RENDER_HEIGHT,
+                    ],
                     &context.draw_state,
                     transform,
                     graphics,
@@ -43,7 +54,10 @@ impl Player {
     }
 
     pub fn new(world: &mut World<f64>, position: (f64, f64)) -> Player {
-        let player_shape = ShapeHandle::new(Cuboid::new(Vector2::new(PLAYER_BODY_WIDTH, PLAYER_BODY_HEIGHT)));
+        let player_shape = ShapeHandle::new(Cuboid::new(Vector2::new(
+            PLAYER_BODY_WIDTH,
+            PLAYER_BODY_HEIGHT,
+        )));
         let player_collider = ColliderDesc::new(player_shape)
             .density(1.0)
             .material(MaterialHandle::new(BasicMaterial::new(0.0, 0.0)));
