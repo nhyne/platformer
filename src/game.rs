@@ -16,7 +16,10 @@ use nphysics2d::object::{BodyPartHandle, ColliderDesc};
 use nphysics2d::world::World;
 
 use std::collections::HashSet;
+use self::ncollide2d::events::ContactEvent;
 
+const FLOOR_WIDTH: f64 = 800.0;
+const FLOOR_HEIGHT: f64 = 10.0;
 const BLACK: [f32; 4] = [0.0, 0.0, 0.0, 1.0];
 
 pub struct Game {
@@ -47,6 +50,10 @@ impl Game {
 
     pub fn update(&mut self) {
         self.player.update(&mut self.world, &self.keys_pressed);
+
+        for contact_event in self.world.contact_events() {
+            self.handle_contact_event(contact_event);
+        }
 
         self.world.step();
     }
@@ -80,9 +87,17 @@ impl Game {
         self.render_ground(context, transform, graphics);
     }
 
+    fn handle_contact_event(&self, contact_event: &ContactEvent) {
+        if let &ContactEvent::Started(collider1, collider2) = contact_event {
+            // logic for the actual collision
+            println!("there was a collision");
+
+        }
+    }
+
     fn init_ground(world: &mut World<f64>) {
         // do ground stuff
-        let wall_shape = ShapeHandle::new(Cuboid::new(Vector2::new(200.0, 5.0)));
+        let wall_shape = ShapeHandle::new(Cuboid::new(Vector2::new(FLOOR_WIDTH / 2.0, FLOOR_HEIGHT / 2.0)));
         ColliderDesc::new(wall_shape)
             .material(MaterialHandle::new(BasicMaterial::new(0.0, 0.0)))
             .position(Isometry2::translation(200.0, 400.0))
@@ -92,7 +107,7 @@ impl Game {
     fn render_ground<G: Graphics>(&self, context: Context, transform: Matrix2d, graphics: &mut G) {
         let rectangle = Rectangle::new(BLACK);
         rectangle.draw(
-            [0.0, 395.0, 400.0, 10.0],
+            [0.0, 395.0, FLOOR_WIDTH, FLOOR_HEIGHT],
             &context.draw_state,
             transform,
             graphics,
