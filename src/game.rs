@@ -90,6 +90,7 @@ impl Game {
     fn handle_contact_event(&self, contact_event: &ContactEvent) {
         if let &ContactEvent::Started(collider1, collider2) = contact_event {
             // logic for the actual collision
+            // need to figure out how to handle the collisions without just iterating over type that it could be like "bullet, enemy, or spell"
             println!("there was a collision");
 
         }
