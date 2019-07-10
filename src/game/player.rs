@@ -1,7 +1,7 @@
 extern crate nalgebra;
 extern crate nphysics2d;
 
-use piston_window::math::Matrix2d;
+use piston_window::math::{Matrix2d, Vec2d};
 use piston_window::*;
 
 use core::borrow::Borrow;

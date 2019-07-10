@@ -9,14 +9,16 @@ extern crate piston_window;
 use piston_window::math::Matrix2d;
 use piston_window::*;
 
+use crate::entities::sprite;
+
 use nalgebra::{Isometry2, Vector2};
 use ncollide2d::shape::{Cuboid, ShapeHandle};
 use nphysics2d::material::{BasicMaterial, MaterialHandle};
 use nphysics2d::object::{BodyPartHandle, ColliderDesc};
 use nphysics2d::world::World;
 
-use std::collections::HashSet;
 use self::ncollide2d::events::ContactEvent;
+use std::collections::HashSet;
 
 const FLOOR_WIDTH: f64 = 800.0;
 const FLOOR_HEIGHT: f64 = 10.0;
@@ -92,13 +94,15 @@ impl Game {
             // logic for the actual collision
             // need to figure out how to handle the collisions without just iterating over type that it could be like "bullet, enemy, or spell"
             println!("there was a collision");
-
         }
     }
 
     fn init_ground(world: &mut World<f64>) {
         // do ground stuff
-        let wall_shape = ShapeHandle::new(Cuboid::new(Vector2::new(FLOOR_WIDTH / 2.0, FLOOR_HEIGHT / 2.0)));
+        let wall_shape = ShapeHandle::new(Cuboid::new(Vector2::new(
+            FLOOR_WIDTH / 2.0,
+            FLOOR_HEIGHT / 2.0,
+        )));
         ColliderDesc::new(wall_shape)
             .material(MaterialHandle::new(BasicMaterial::new(0.0, 0.0)))
             .position(Isometry2::translation(200.0, 400.0))

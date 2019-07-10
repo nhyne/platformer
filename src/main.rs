@@ -1,4 +1,5 @@
 mod game;
+mod entities;
 
 extern crate piston_window;
 
@@ -11,12 +12,11 @@ fn main() {
     let mut game = game::Game::new();
 
     let mut frame = 0.0;
-    let mut window: PistonWindow =
-        WindowSettings::new("piston: draw_state", [WINDOW_WIDTH, WINDOW_HEIGHT])
-            .exit_on_esc(true)
-            .samples(4)
-            .build()
-            .unwrap();
+    let mut window: PistonWindow = WindowSettings::new("Platformer", [WINDOW_WIDTH, WINDOW_HEIGHT])
+        .exit_on_esc(true)
+        .samples(4)
+        .build()
+        .unwrap();
 
     let mut events = Events::new(EventSettings::new().ups(60));
     while let Some(e) = events.next(&mut window) {
