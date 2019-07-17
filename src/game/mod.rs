@@ -6,9 +6,9 @@ extern crate ncollide2d;
 extern crate nphysics2d;
 extern crate piston_window;
 
+use crate::entities::sprite::Sprite;
 use piston_window::math::Matrix2d;
 use piston_window::*;
-use crate::entities::sprite::Sprite;
 
 use nalgebra::{Isometry2, Vector2};
 use ncollide2d::shape::{Cuboid, ShapeHandle};

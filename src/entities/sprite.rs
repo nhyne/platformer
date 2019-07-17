@@ -11,4 +11,3 @@ pub trait Sprite {
         world: &World<f64>,
     );
 }
-

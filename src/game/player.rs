@@ -4,6 +4,7 @@ extern crate nphysics2d;
 use piston_window::math::Matrix2d;
 use piston_window::*;
 
+use crate::entities::sprite::Sprite;
 use core::borrow::Borrow;
 use nalgebra::{Isometry2, Vector2};
 use ncollide2d::shape::{Cuboid, ShapeHandle};
@@ -12,7 +13,6 @@ use nphysics2d::material::{BasicMaterial, MaterialHandle};
 use nphysics2d::object::{Body, BodyHandle, ColliderDesc, RigidBodyDesc};
 use nphysics2d::world::World;
 use std::collections::HashSet;
-use crate::entities::sprite::Sprite;
 
 const BLACK: [f32; 4] = [0.0, 0.0, 0.0, 1.0];
 const PLAYER_BODY_WIDTH: f64 = 15.0;

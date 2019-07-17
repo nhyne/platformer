@@ -1,6 +1,7 @@
 extern crate nalgebra;
 extern crate nphysics2d;
 
+use crate::entities::sprite::Sprite;
 use core::borrow::Borrow;
 use nalgebra::{Isometry2, Vector2};
 use ncollide2d::shape::{Cuboid, ShapeHandle};
@@ -9,7 +10,6 @@ use nphysics2d::object::{BodyHandle, ColliderDesc, RigidBodyDesc};
 use nphysics2d::world::World;
 use piston_window::math::Matrix2d;
 use piston_window::*;
-use crate::entities::sprite::Sprite;
 
 const RED: [f32; 4] = [1.0, 0.0, 0.0, 1.0];
 const ENEMY_BODY_WIDTH: f64 = 15.0;

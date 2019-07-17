@@ -1,5 +1,5 @@
-mod game;
 mod entities;
+mod game;
 
 extern crate piston_window;
 
