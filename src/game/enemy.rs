@@ -9,6 +9,7 @@ use nphysics2d::object::{BodyHandle, ColliderDesc, RigidBodyDesc};
 use nphysics2d::world::World;
 use piston_window::math::Matrix2d;
 use piston_window::*;
+use crate::entities::sprite::Sprite;
 
 const RED: [f32; 4] = [1.0, 0.0, 0.0, 1.0];
 const ENEMY_BODY_WIDTH: f64 = 15.0;
@@ -19,6 +20,32 @@ const ENEMY_RENDER_HEIGHT: f64 = ENEMY_BODY_HEIGHT * 2.0;
 pub struct Enemy {
     pub shape: Rectangle,
     pub body: BodyHandle,
+}
+
+impl Sprite for Enemy {
+    fn render<G: Graphics>(
+        &self,
+        context: Context,
+        transform: Matrix2d,
+        graphics: &mut G,
+        world: &World<f64>,
+    ) {
+        if let Some(enemy_body) = world.rigid_body(self.body) {
+            let enemy_body = enemy_body.borrow();
+            let pos = enemy_body.position().translation.vector;
+            self.shape.draw(
+                [
+                    pos[0] - ENEMY_BODY_WIDTH,
+                    pos[1] - ENEMY_BODY_HEIGHT,
+                    ENEMY_RENDER_WIDTH,
+                    ENEMY_RENDER_HEIGHT,
+                ],
+                &context.draw_state,
+                transform,
+                graphics,
+            )
+        }
+    }
 }
 
 impl Enemy {
@@ -40,30 +67,6 @@ impl Enemy {
         Enemy {
             body: enemy_handle,
             shape: Rectangle::new(RED),
-        }
-    }
-
-    pub fn render<G: Graphics>(
-        &self,
-        context: Context,
-        transform: Matrix2d,
-        graphics: &mut G,
-        world: &World<f64>,
-    ) {
-        if let Some(enemy_body) = world.rigid_body(self.body) {
-            let enemy_body = enemy_body.borrow();
-            let pos = enemy_body.position().translation.vector;
-            self.shape.draw(
-                [
-                    pos[0] - ENEMY_BODY_WIDTH,
-                    pos[1] - ENEMY_BODY_HEIGHT,
-                    ENEMY_RENDER_WIDTH,
-                    ENEMY_RENDER_HEIGHT,
-                ],
-                &context.draw_state,
-                transform,
-                graphics,
-            )
         }
     }
 }
