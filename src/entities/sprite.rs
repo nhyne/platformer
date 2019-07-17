@@ -1,9 +1,14 @@
-use ncollide2d::shape::{Shape, ShapeHandle};
-use nphysics2d::object::{Body, BodyHandle, ColliderDesc, RigidBodyDesc};
+use nphysics2d::world::World;
+use piston_window::math::Matrix2d;
+use piston_window::*;
 
-pub struct Sprite {
-    // TODO: need to have a collider of some kind as well
-    //pub shape: Shape<f64>,
-    pub body_handle: BodyHandle,
+pub trait Sprite {
+    fn render<G: Graphics>(
+        &self,
+        context: Context,
+        transform: Matrix2d,
+        graphics: &mut G,
+        world: &World<f64>,
+    );
 }
 

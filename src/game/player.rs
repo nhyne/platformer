@@ -1,7 +1,7 @@
 extern crate nalgebra;
 extern crate nphysics2d;
 
-use piston_window::math::{Matrix2d, Vec2d};
+use piston_window::math::Matrix2d;
 use piston_window::*;
 
 use core::borrow::Borrow;
@@ -12,6 +12,7 @@ use nphysics2d::material::{BasicMaterial, MaterialHandle};
 use nphysics2d::object::{Body, BodyHandle, ColliderDesc, RigidBodyDesc};
 use nphysics2d::world::World;
 use std::collections::HashSet;
+use crate::entities::sprite::Sprite;
 
 const BLACK: [f32; 4] = [0.0, 0.0, 0.0, 1.0];
 const PLAYER_BODY_WIDTH: f64 = 15.0;
@@ -24,8 +25,8 @@ pub struct Player {
     pub body: BodyHandle,
 }
 
-impl Player {
-    pub fn render<G: Graphics>(
+impl Sprite for Player {
+    fn render<G: Graphics>(
         &self,
         context: Context,
         transform: Matrix2d,
@@ -52,7 +53,9 @@ impl Player {
             }
         }
     }
+}
 
+impl Player {
     pub fn new(world: &mut World<f64>, position: (f64, f64)) -> Player {
         let player_shape = ShapeHandle::new(Cuboid::new(Vector2::new(
             PLAYER_BODY_WIDTH,

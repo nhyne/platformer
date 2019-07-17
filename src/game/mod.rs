@@ -8,8 +8,7 @@ extern crate piston_window;
 
 use piston_window::math::Matrix2d;
 use piston_window::*;
-
-use crate::entities::sprite;
+use crate::entities::sprite::Sprite;
 
 use nalgebra::{Isometry2, Vector2};
 use ncollide2d::shape::{Cuboid, ShapeHandle};
