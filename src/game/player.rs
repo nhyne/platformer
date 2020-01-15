@@ -84,6 +84,9 @@ impl Player {
         if keys_pressed.contains(&Key::D) {
             self.move_right(world);
         }
+        if keys_pressed.contains(&Key::S) {
+            self.move_down(world);
+        }
     }
 
     fn move_left(&self, world: &mut World<f64>) {
@@ -96,6 +99,13 @@ impl Player {
     fn move_right(&self, world: &mut World<f64>) {
         if let Some(body) = world.rigid_body_mut(self.body) {
             let force = Force2::linear(Vector2::new(5.0, 0.0));
+            body.apply_force(1, &force, ForceType::VelocityChange, false);
+        }
+    }
+
+    fn move_down(&self, world: &mut World<f64>) {
+        if let Some(body) = world.rigid_body_mut(self.body) {
+            let force = Force2::linear(Vector2::new(0.0, 5.0));
             body.apply_force(1, &force, ForceType::VelocityChange, false);
         }
     }

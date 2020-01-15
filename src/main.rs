@@ -4,13 +4,13 @@ extern crate piston_window;
 
 use piston_window::*;
 
-const WINDOW_WIDTH: f64 = 800.0;
-const WINDOW_HEIGHT: f64 = 420.0;
+const WINDOW_WIDTH: f64 = 1000.0;
+const WINDOW_HEIGHT: f64 = 1600.0;
 
 fn main() {
     let mut game = game::Game::new();
 
-    let mut frame = 0.0;
+    let frame = 0.0;
     let mut window: PistonWindow =
         WindowSettings::new("piston: draw_state", [WINDOW_WIDTH, WINDOW_HEIGHT])
             .exit_on_esc(true)
@@ -23,9 +23,8 @@ fn main() {
         match e {
             Event::Input(input_event) => {
                 //handle input events
-                match input_event {
-                    Input::Button(key) => game.handle_keyboard_event(key),
-                    _ => {}
+                if let Input::Button(key) = input_event {
+                    game.handle_keyboard_event(key)
                 }
             }
             Event::Loop(loop_event) => match loop_event {
@@ -40,6 +39,6 @@ fn main() {
             },
             _ => {}
         }
-        frame = frame - 0.01;
+        //        frame = frame - 0.01;
     }
 }
